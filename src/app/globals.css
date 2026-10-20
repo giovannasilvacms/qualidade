@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+body { @apply bg-paper text-navy antialiased; }
+.title-caps { @apply font-black uppercase tracking-tight; }
+.card { @apply rounded-card bg-white shadow-[0_8px_30px_rgba(8,43,76,0.08)] border border-mist; }
+.btn { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold transition active:scale-[0.98] focus-visible:outline focus-visible:outline-4 focus-visible:outline-accent disabled:opacity-50; }
+.btn-primary { @apply btn bg-brand text-white hover:bg-navy; }
+.btn-accent { @apply btn bg-accent text-navy hover:brightness-95; }
+.btn-ghost { @apply btn border-2 border-white/80 text-white hover:bg-white/15; }
