@@ -1,12 +1,16 @@
-import {
-  createServerClient,
-  type CookieMethodsServer,
-} from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import type { CookieOptions } from '@supabase/ssr';
 import {
   SUPABASE_PUBLISHABLE_KEY,
   SUPABASE_URL,
 } from '@/lib/env';
+
+type CookieToSet = {
+  name: string;
+  value: string;
+  options: CookieOptions;
+};
 
 /** Renova o cookie de sessão do Supabase a cada requisição. */
 export async function updateSession(request: NextRequest) {
@@ -17,11 +21,11 @@ export async function updateSession(request: NextRequest) {
     SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
-        getAll: () => request.cookies.getAll(),
+        getAll() {
+          return request.cookies.getAll();
+        },
 
-        setAll: (
-          list: Parameters<CookieMethodsServer['setAll']>[0]
-        ) => {
+        setAll(list: CookieToSet[]) {
           list.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
