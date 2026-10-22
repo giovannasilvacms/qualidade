@@ -1,9 +1,16 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import {
   SUPABASE_PUBLISHABLE_KEY,
   SUPABASE_URL,
 } from '@/lib/env';
+
+type CookieToSet = {
+  name: string;
+  value: string;
+  options?: Partial<ResponseCookie>;
+};
 
 /** Renova o cookie de sessão do Supabase a cada requisição. */
 export async function updateSession(request: NextRequest) {
@@ -18,7 +25,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
 
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: CookieToSet[]) {
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
