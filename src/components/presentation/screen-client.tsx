@@ -25,10 +25,48 @@ export function ScreenClient({ code }: { code: string }) {
   const { now } = useServerClock();
   usePreloadImages([data && data.kind === 'ok' ? data.nextImage : null], 1200);
 
-  if (!data) return <Full><Loader2 className="size-14 animate-spin" aria-label="Carregando" /></Full>;
-  if (data.kind === 'no_auth') return <Full><p className="text-3xl font-black">Faça login como apresentador neste computador.</p><a href={`/apresentador?next=/apresentacao/${code}`} className="btn-accent mt-6">Entrar</a></Full>;
-  if (data.kind === 'forbidden') return <Full><p className="text-3xl font-black">Sua conta não tem acesso a esta sessão.</p></Full>;
-  if (data.kind === 'no_session') return <Full><p className="text-3xl font-black">Sessão não encontrada.</p></Full>;
+  if (!data) {
+    return (
+      <Full>
+        <Loader2 className="size-14 animate-spin" aria-label="Carregando" />
+      </Full>
+    );
+  }
+
+  if (data.kind !== 'ok') {
+    switch (data.kind) {
+      case 'no_auth':
+        return (
+          <Full>
+            <p className="text-3xl font-black">
+              Faça login como apresentador neste computador.
+            </p>
+            <a
+              href={`/apresentador?next=/apresentacao/${code}`}
+              className="btn-accent mt-6"
+            >
+              Entrar
+            </a>
+          </Full>
+        );
+
+      case 'forbidden':
+        return (
+          <Full>
+            <p className="text-3xl font-black">
+              Sua conta não tem acesso a esta sessão.
+            </p>
+          </Full>
+        );
+
+      case 'no_session':
+        return (
+          <Full>
+            <p className="text-3xl font-black">Sessão não encontrada.</p>
+          </Full>
+        );
+    }
+  }
 
   return (
     <div className="relative flex min-h-dvh flex-col bg-navy text-white">
