@@ -50,10 +50,25 @@ export function PresenterPanel({ sessionId }: { sessionId: string }) {
   const [presenceKey] = useState(() => crypto.randomUUID());
   const { data, conn, onlineIds, refetch, reconnect } = useSessionSync({ fetcher, role: 'presenter', presenceKey });
 
-  if (!data) return <div className="grid min-h-dvh place-items-center"><Loader2 aria-label="Carregando" className="size-10 animate-spin text-brand" /></div>;
-  if (data.kind === 'no_auth') return <Msg text="Faça login como apresentador." href="/apresentador" label="Entrar" />;
-  if (data.kind === 'forbidden') return <Msg text="Sua conta não tem acesso a esta sessão." href="/apresentador/sessoes" label="Voltar" />;
-  if (data.kind === 'no_session') return <Msg text="Sessão não encontrada." href="/apresentador/sessoes" label="Voltar" />;
+  if (!data) {
+    return (
+      <div className="grid min-h-dvh place-items-center">
+        <Loader2 aria-label="Carregando" className="size-10 animate-spin text-brand" />
+      </div>
+    );
+  }
+
+  if (data.kind !== 'ok') {
+    switch (data.kind) {
+      case 'no_auth':
+        return <Msg text="Faça login como apresentador." href="/apresentador" label="Entrar" />;
+      case 'forbidden':
+        return <Msg text="Sua conta não tem acesso a esta sessão." href="/apresentador/sessoes" label="Voltar" />;
+      case 'no_session':
+        return <Msg text="Sessão não encontrada." href="/apresentador/sessoes" label="Voltar" />;
+    }
+  }
+
   return <Panel d={data} sessionId={sessionId} conn={conn} onlineIds={onlineIds} refetch={refetch} reconnect={reconnect} />;
 }
 
