@@ -53,7 +53,7 @@ export function PresenterPanel({ sessionId }: { sessionId: string }) {
   if (!data) return <div className="grid min-h-dvh place-items-center"><Loader2 aria-label="Carregando" className="size-10 animate-spin text-brand" /></div>;
   if (data.kind === 'no_auth') return <Msg text="Faça login como apresentador." href="/apresentador" label="Entrar" />;
   if (data.kind === 'forbidden') return <Msg text="Sua conta não tem acesso a esta sessão." href="/apresentador/sessoes" label="Voltar" />;
-  if (data.kind === 'no_session') return <Msg text="Sessão não encontrada." href="/apresentador/sessoes" label="Voltar" />;
+  if (data.kind !== 'ok') return <Msg text="Sessão não encontrada." href="/apresentador/sessoes" label="Voltar" />;
   return <Panel d={data} sessionId={sessionId} conn={conn} onlineIds={onlineIds} refetch={refetch} reconnect={reconnect} />;
 }
 
